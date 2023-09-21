@@ -1,6 +1,5 @@
 package com.pediro;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
@@ -9,7 +8,6 @@ import java.util.Stack;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer;
 import com.pediro.models.dynamodb.*;
 import com.pediro.models.champion.Data;
 import com.pediro.operations.ChampionDataOperations;

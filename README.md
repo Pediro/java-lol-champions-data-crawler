@@ -1,2 +1,2 @@
 # java-lol-champions-data-crawler
-Logic used to get data for a demo app
+A project used to poll champion data from the Riot cdn and develop a dataset to use in a demo web app.
