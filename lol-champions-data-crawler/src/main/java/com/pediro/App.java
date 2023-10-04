@@ -1,11 +1,13 @@
 package com.pediro;
 
 import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.pediro.models.dynamodb.*;
@@ -22,7 +24,9 @@ public final class App {
             ChampionDataOperations championDataOperations = new ChampionDataOperations();
             Map<String, Data> championsData = championDataOperations.getChampionsData();        
             Set<String> championNames = championsData.keySet();
-            List<Entity> entities = new Stack<Entity>();
+
+            
+            List<Entity> entities = new ArrayList<Entity>();
             for (String championName : championNames) {
                 Data championData = championsData.get(championName);
                 String championLore = championDataOperations.getLore(championName);
@@ -32,21 +36,38 @@ public final class App {
                 entities.add(new Entity(championName, coverImage, championLore, thumbnailImage, championPrice, championData.getTags(), championData.getInfo().getDifficulty()));
             }
 
-            Products products = new Products(entities);
-
             ObjectMapper mapper = new ObjectMapper();
             SimpleModule module = new SimpleModule();
             module.addSerializer(Products.class, new ProductsSerializer());
             mapper.registerModule(module);
 
-            String serializedProducts = mapper.writeValueAsString(products);
-            FileWriter outputFile = new FileWriter("lol-champions-data-crawler\\src\\main\\java\\com\\pediro\\data\\dynamodb-data.json");
-            outputFile.write(serializedProducts);
-            outputFile.close();
+            //Due to aws dynamodb limitation to 100 items per batch import we're creating two json files of champions
+            int batchSize = 25;
+            int batchIndex = 0;
+            int interation = 1;
+            while (batchIndex <= entities.size() - 1) {
+                int toIndex = batchIndex + batchSize >= entities.size() - 1 ? entities.size() - 1 : batchIndex + batchSize;
+                List<Entity> batch = entities.subList(batchIndex, toIndex);
+                Products products = new Products(batch);
+                
+                String serializedProducts = mapper.writeValueAsString(products);
+                String fileDir = String.format("lol-champions-data-crawler\\src\\main\\java\\com\\pediro\\data\\champion-data-batch-%s.json", interation);
+                FileWriter outputFile = new FileWriter(fileDir);
+                outputFile.write(serializedProducts);
+                outputFile.close();
+                
+                //Move batchIndex to the next subset of champions, unless it will pass the size of champions we are importing then set it to the size of the list
+                batchIndex = batchIndex + batchSize;
+                interation++;
+            }
 
         } catch (Exception ex) {
             //TODO: Add catch for each exception type
             System.out.println("An error occurred.");
         }        
+    }
+
+    private static void SerializeProducts(ObjectMapper mapper, Products products, String fileName) throws IOException {
+        
     }
 }

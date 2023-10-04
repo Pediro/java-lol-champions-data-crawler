@@ -10,7 +10,6 @@ public class Products {
     @JsonSerialize(using = ProductsSerializer.class)
     private List<Entity> products;
 
-
     public Products(List<Entity> products) {
         this.products = products;
     }

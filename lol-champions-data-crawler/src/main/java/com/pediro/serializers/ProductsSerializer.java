@@ -28,15 +28,14 @@ public class ProductsSerializer extends StdSerializer<Products> {
                         gen.writeObjectFieldStart("Item");
                             WriteJsonString(gen, "name", entity.getName().toLowerCase());
                             gen.writeObjectFieldStart("tags");
-                                gen.writeArrayFieldStart("SS");
-                                    gen.writeArray(entity.getTags(), 0, entity.getTags().length);
-                                gen.writeEndArray();
+                                gen.writeFieldName("SS");
+                                gen.writeArray(entity.getTags(), 0, entity.getTags().length);
                             gen.writeEndObject();
                             WriteJsonString(gen, "coverImage", entity.getCoverImage());
                             WriteJsonString(gen, "thumbnailImage", entity.getThumbnailImage());
                             WriteJsonString(gen, "description", entity.getDescription());
-                            WriteJsonInt(gen, "difficult", entity.getDifficulty());
-                            WriteJsonInt(gen, "price", entity.getPrice());
+                            WriteJsonString(gen, "difficult", String.valueOf(entity.getDifficulty()));
+                            WriteJsonString(gen, "price", String.valueOf(entity.getPrice()));
                         gen.writeEndObject();
                     gen.writeEndObject();
                 gen.writeEndObject();
@@ -48,12 +47,6 @@ public class ProductsSerializer extends StdSerializer<Products> {
     private void WriteJsonString(JsonGenerator gen, String fieldName, String value) throws IOException {
         gen.writeObjectFieldStart(fieldName);
             gen.writeStringField("S", value);
-        gen.writeEndObject();
-    }
-
-    private void WriteJsonInt(JsonGenerator gen, String fieldName, int value) throws IOException {
-        gen.writeObjectFieldStart(fieldName);
-            gen.writeNumberField("N", value);
         gen.writeEndObject();
     }
 }
