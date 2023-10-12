@@ -31,7 +31,7 @@ public class ChampionDataOperations {
 
     public int getPrice(String championName) throws Exception {
         try {
-            File championCostsFile = new File("lol-champions-data-crawler\\src\\main\\java\\com\\pediro\\data\\champion-costs.json");
+            File championCostsFile = new File("src\\main\\java\\com\\pediro\\data\\champion-costs.json");
             Scanner myReader  = new Scanner(championCostsFile);
             String jsonString = myReader.nextLine();
             myReader.close();

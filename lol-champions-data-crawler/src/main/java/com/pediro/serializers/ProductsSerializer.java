@@ -34,8 +34,8 @@ public class ProductsSerializer extends StdSerializer<Products> {
                             WriteJsonString(gen, "coverImage", entity.getCoverImage());
                             WriteJsonString(gen, "thumbnailImage", entity.getThumbnailImage());
                             WriteJsonString(gen, "description", entity.getDescription());
-                            WriteJsonString(gen, "difficult", String.valueOf(entity.getDifficulty()));
-                            WriteJsonString(gen, "price", String.valueOf(entity.getPrice()));
+                            WriteJsonInteger(gen, "difficult", entity.getDifficulty());
+                            WriteJsonInteger(gen, "price", entity.getPrice());
                         gen.writeEndObject();
                     gen.writeEndObject();
                 gen.writeEndObject();
@@ -47,6 +47,12 @@ public class ProductsSerializer extends StdSerializer<Products> {
     private void WriteJsonString(JsonGenerator gen, String fieldName, String value) throws IOException {
         gen.writeObjectFieldStart(fieldName);
             gen.writeStringField("S", value);
+        gen.writeEndObject();
+    }
+
+    private void WriteJsonInteger(JsonGenerator gen, String fieldName, Integer value) throws IOException {
+        gen.writeObjectFieldStart(fieldName);
+            gen.writeStringField("N", String.valueOf(value));
         gen.writeEndObject();
     }
 }

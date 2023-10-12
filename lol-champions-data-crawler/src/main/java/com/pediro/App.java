@@ -51,7 +51,7 @@ public final class App {
                 Products products = new Products(batch);
                 
                 String serializedProducts = mapper.writeValueAsString(products);
-                String fileDir = String.format("lol-champions-data-crawler\\src\\main\\java\\com\\pediro\\data\\champion-data-batch-%s.json", interation);
+                String fileDir = String.format("src\\main\\java\\com\\pediro\\data\\champion-data-batch-%s.json", interation);
                 FileWriter outputFile = new FileWriter(fileDir);
                 outputFile.write(serializedProducts);
                 outputFile.close();
@@ -63,11 +63,8 @@ public final class App {
 
         } catch (Exception ex) {
             //TODO: Add catch for each exception type
-            System.out.println("An error occurred.");
+            System.out.println(ex.getMessage());
+            System.out.println(ex.getStackTrace());
         }        
-    }
-
-    private static void SerializeProducts(ObjectMapper mapper, Products products, String fileName) throws IOException {
-        
     }
 }
